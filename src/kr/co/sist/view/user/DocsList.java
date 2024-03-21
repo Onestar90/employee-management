@@ -84,7 +84,8 @@ public class DocsList extends JFrame{
         jbtnGoMain.addActionListener(dle);
         cbcheck.addItemListener(dle);
         
-        dle.searchDocInfo(240000);
+        int empNo=240000;
+        dle.searchDocInfo(empNo);
         
         setLayout(null);
         

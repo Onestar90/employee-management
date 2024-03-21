@@ -57,7 +57,7 @@ public class DocsListEvent implements ActionListener, ItemListener{
 	}
 	
 	public void searchDocInfo(int empNo) {
-	    Object[] content = new Object[8];
+	    Object[] content = new Object[9];
 	    DocsListDAO dlDAO = DocsListDAO.getInstance();
 	    List<DocumentVO> list;
 	    try {
@@ -70,8 +70,9 @@ public class DocsListEvent implements ActionListener, ItemListener{
 	            content[3] = dVO.getWorkLog();
 	            content[4] = dVO.getApprDesc();
 	            content[5] = dVO.getFileName();
-	            content[6] = dVO.getEmpNo(); // 이 부분에서 DocumentVO에서 empNo를 가져와 사용
-	            content[7] = dVO.getDocDate();
+	            content[6] = dVO.getDept();
+	            content[7] = dVO.getEmpNo();
+	            content[8] = dVO.getDocDate();
 	            dtmjtabResult.addRow(content);
 	        }
 	    } catch (Exception e) {

@@ -32,25 +32,29 @@ public class DocsListDAO {
 	
 	
 	public List<DocumentVO> selectAllDocument(int empNo) throws SQLException{
+		
 		List<DocumentVO> list = new ArrayList<DocumentVO>();
-		DocumentVO dVO =null;
 		Connection con = DbConnection.getCon();
 		PreparedStatement pstmt =null;
 		ResultSet rs=null;
 		try {
 			String selectAllDocument
-			="   select sd.doc_no, bl.title, c.grp_code, d.dept_name,bl.doc_date, c.code, grp_code2,sd.edit_date"
+			="   select sd.doc_no, bl.title, d.dept_name,c.grp_code,bl.work_log, c.code, bl.grp_code2,ei.emp_No,sd.edit_date"
 			+"  	from bussiness_log bl, share_docs sd ,dept d, common c, emp_info ei  "
 					+"where (bl.doc_no=sd.doc_no)and(sd.dept_code=d.dept_code)and(bl.grp_code=c.grp_code) and(bl.code=c.code)"
 			+"and(ei.emp_no = ?)";
 			pstmt = con.prepareStatement(selectAllDocument);
 			rs = pstmt.executeQuery();
+			
+		
+			DocumentVO dVO =null;
 			while(rs.next()) {//String docNo, String title, String workDesc, String workLog, String apprDesc, String fileName,
 //				String dept, int empNo, Date docDate
 				dVO = new DocumentVO(rs.getString("DOC_NO"),
-						rs.getString("TITLE"), rs.getString("DEPT"),
-						rs.getString("DEPT_CODE"), rs.getString("deptname"), rs.getString("fileN"),rs.getString("DEPT"),rs.getInt("EMPNO"),rs.getDate("DOC_DATE"));
-				pstmt.setDouble(1, empNo);
+						rs.getString("TITLE"), rs.getString("dept_name"),
+						selectAllDocument,selectAllDocument, selectAllDocument,rs.getString("dept_name"),rs.getInt("empNo"),rs.getDate("DOC_DATE"));
+				
+				pstmt.setInt(1, dVO.getEmpNo());
 				
 				
 				list.add(dVO);
