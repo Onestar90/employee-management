@@ -31,7 +31,7 @@ public class DocsListDAO {
 	
 	
 	
-	public List<DocumentVO> selectAllDocument(int empno) throws SQLException{
+	public List<DocumentVO> selectAllDocument(int empNo) throws SQLException{
 		List<DocumentVO> list = new ArrayList<DocumentVO>();
 		DocumentVO dVO =null;
 		Connection con = DbConnection.getCon();
@@ -40,17 +40,18 @@ public class DocsListDAO {
 		try {
 			String selectAllDocument
 			="   select sd.doc_no, bl.title, c.grp_code, d.dept_name,bl.doc_date, c.code, grp_code2,sd.edit_date"
-			+"  	from bussiness_log bl, share_docs sd ,dept d, common c  "
-					+"where (bl.doc_no=sd.doc_no)and(sd.dept_code=d.dept_code)and(bl.grp_code=c.grp_code) and(bl.code=c.code)";
+			+"  	from bussiness_log bl, share_docs sd ,dept d, common c, emp_info ei  "
+					+"where (bl.doc_no=sd.doc_no)and(sd.dept_code=d.dept_code)and(bl.grp_code=c.grp_code) and(bl.code=c.code)"
+			+"and(ei.emp_no = ?)";
 			pstmt = con.prepareStatement(selectAllDocument);
-			rs=pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			while(rs.next()) {//String docNo, String title, String workDesc, String workLog, String apprDesc, String fileName,
 //				String dept, int empNo, Date docDate
 				dVO = new DocumentVO(rs.getString("DOC_NO"),
-						rs.getString("TITLE"), rs.getString("GRP_CODE"),
-						rs.getString("DEPT_CODE"), rs.getString("deptname"), rs.getString("GRP_CODE2"),empno,rs.getDate("DOC_DATE"));
+						rs.getString("TITLE"), rs.getString("DEPT"),
+						rs.getString("DEPT_CODE"), rs.getString("deptname"), rs.getString("fileN"),rs.getString("DEPT"),rs.getInt("EMPNO"),rs.getDate("DOC_DATE"));
+				pstmt.setDouble(1, empNo);
 				
-				dVO = new DocumentVO(selectAllDocument, selectAllDocument, selectAllDocument, selectAllDocument, selectAllDocument, selectAllDocument, 0, null);
 				
 				list.add(dVO);
 			}
@@ -62,18 +63,21 @@ public class DocsListDAO {
 		return list;
 	}//selectAllDocument
 	
-	public DocumentVO selectDocinfo(int empno)throws SQLException{
+	
+	
+	
+	public DocumentVO selectDocinfo(int emp_no)throws SQLException{
 		dVO=null;
 		Connection con = DbConnection.getCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			String SelectDoc="     select sd.doc_no, bl.title, c.grp_code, sd.dept_code,bl.doc_date, c.code, grp_code2,sd.edit_date "
-					+"     from bussiness_log bl, share_docs sd ,dept d, common c    "
+					+"     from bussiness_log bl, share_docs sd ,dept d, common c, emp_info ei   "
 					+("where (bl.doc_no=sd.doc_no)and(sd.dept_code=d.dept_code)and(bl.grp_code=c.grp_code) and(bl.code=c.code)");
 			pstmt = con.prepareStatement(SelectDoc);
-			pstmt.setString(1, SelectDoc);
 			rs=pstmt.executeQuery();
+			pstmt.setString(1, SelectDoc);
 			
 		}finally {
 			DbConnection.dbClose(rs, pstmt, con);
